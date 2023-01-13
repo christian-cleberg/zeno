@@ -51,6 +51,8 @@ html_repo() {
   diff=$5
   files=$6
   repo_name=$7
+  git_url=$8
+  ssh_url=$9
   datetime=$(date)
 
   cat <<EOF
@@ -68,6 +70,10 @@ html_repo() {
       <nav>
         <a>$title</a>
       </nav>
+      <hr>
+      <p>Clone</p>
+      <p>git://$git_url/$repo_name.git</p>
+      <p>ssh://$ssh_url/$repo_name.git</p>
       <hr>
       <p>Branches</p>
       <p>$(while IFS= read -r line; do echo "<br>$line"; done < <(printf '%s\n' "$branches"))</p>
@@ -99,6 +105,8 @@ files=$(git ls-tree --name-only --full-tree -r HEAD)
 # Gather HTML options
 read -p "Please provide a site title: " title
 read -p "Please provide a site description: " description
+read -p "Please provide the Git clone URL: " git_url
+read -p "Please provide the SSH clone URL: " ssh_url
 
 # TODO: Loop and create index page with a list of links for each repository
 html_index "$title" "$description" > build/index.html
@@ -106,7 +114,7 @@ html_index "$title" "$description" > build/index.html
 # TODO: Loop and add a page for each repository
 repo_name=$(basename `git rev-parse --show-toplevel`)
 repo_description=$(> .git/description)
-html_repo "$title" "$repo_description" "$branches" "$log" "$diff" "$files" "$repo_name" > build/"$repo_name.html"
+html_repo "$title" "$repo_description" "$branches" "$log" "$diff" "$files" "$repo_name" "$git_url" "$ssh_url" > build/"$repo_name.html"
 
 # TODO: Minify CSS on move (OPTIONAL FLAG)
 # https://github.com/tdewolff/minify/tree/master/cmd/minify
