@@ -6,6 +6,8 @@ read -p "Enter the path to the git repo: " path
 cd $path
 rm -rf build && mkdir build
 
+# TODO: List of git repositories should be formatted as:
+# Name - Description - Owner - Last Modified
 html_index() {
   title=$1
   description=$2
