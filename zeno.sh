@@ -15,33 +15,44 @@ get_log() {
 }
 
 get_diff() {
-  # TODO: properly diff the current HEAD commit from the previous commit
-  diff=$(git diff $commit01 $commit02)
+  diff=$(git show)
 }
 
 get_files() {
-  # TODO: get file list (test in bare repo)
-  echo ""
-}
-
-get_commit() {
-  # TODO: get details on the most recent commit (author, commit #, parent, diff)
-  echo ""
+  files=$(git ls-tree --full-tree -r HEAD)
 }
 
 export_HTML() {
-  # TODO: cat the README file
+  # TODO: cat the README file from each repo
   # TODO: grab an HTML template and fill this info into it:
     # INDEX: List of repos
     # REPO: Tabs for each:
       # README: Default page
       # TREE:   List of files
       # LOG:    List of commits
-      # DIFF:   Most recent diff
-      # COMMIT: Most recent commit
+      # DIFF:   Most recent diff/commit
+
+  title=$1
+  description=$2
+
+  # TODO: Loop and add link for each repository here
+
+  # TODO: Loop and add each sub-page (or sub-tabs) noted above for each 
+  # repository
 
   echo ""
 }
 
 get_branches
-echo $branch
+echo "Branches: $branch"
+
+get_log
+echo "Log: $log"
+
+get_diff
+echo "Diff: $diff"
+
+get_files
+echo "Files: $files"
+
+export_HTML $title $description
