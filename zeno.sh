@@ -43,6 +43,9 @@ html_index() {
 EOF
 }
 
+# TODO: Parse commit/diff variables for + or - signs at the beginning of a line, 
+# then wrap in a <span class="diff-add"> of <span class="diff-del"> tag so that 
+# we can color-code them
 html_repo() {
   title=$1
   description=$2
