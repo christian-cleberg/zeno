@@ -22,10 +22,16 @@ get_files() {
   files=$(git ls-tree --full-tree -r HEAD)
 }
 
-export_HTML() {
-  # TODO: cat the README file from each repo
+html_index() {
+  # INDEX: List of repos
+  title=$1
+  description=$2
+
+  echo ""
+}
+
+html_repo() {
   # TODO: grab an HTML template and fill this info into it:
-    # INDEX: List of repos
     # REPO: Tabs for each:
       # README: Default page
       # TREE:   List of files
@@ -34,11 +40,6 @@ export_HTML() {
 
   title=$1
   description=$2
-
-  # TODO: Loop and add link for each repository here
-
-  # TODO: Loop and add each sub-page (or sub-tabs) noted above for each 
-  # repository
 
   echo ""
 }
@@ -55,4 +56,9 @@ echo "Diff: $diff"
 get_files
 echo "Files: $files"
 
-export_HTML $title $description
+# TODO: Loop and create index page with a list of links for each repository
+html_index $title $description
+
+# TODO: Loop and add each sub-page (or sub-tabs) noted above for each 
+# repository
+html_repo $title $description
