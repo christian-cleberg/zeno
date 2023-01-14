@@ -31,8 +31,8 @@ html_index() {
     <nav>
       <a href="/">$title</a>
     </nav>
+    <hr>
     <main>
-      <hr>
       <h2>Repositories</h2>
       <ul>
         $(
@@ -78,8 +78,8 @@ html_repo() {
     <nav>
       <a href="/">$title</a>
     </nav>
+    <hr>
     <main>
-      <hr>
       <p>Clone</p>
       <p>git://$git_url/$repo_name.git</p>
       <p>ssh://$ssh_url/$repo_name.git</p>
