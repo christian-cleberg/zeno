@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# TODO: Accept a git directory that may be full of repos, then loop through
 read -p "Enter the path to your git repositories: " path
 
 # Enter repository directory
@@ -12,8 +11,6 @@ git_list=($git_dirs)
 # Create fresh build directory
 rm -rf "$output_path/build" && mkdir "$output_path/build"
 
-# TODO: List of git repositories should be formatted as:
-# Name - Description - Owner - Last Modified
 html_index() {
   title=$1
   description=$2
@@ -55,9 +52,6 @@ html_index() {
 EOF
 }
 
-# TODO: Create vertical UL nav (will require creating repo/ dir instead of 
-# repo.html):
-# README (/), Log (/log/), Tree (/tree/), Diff (/diff/)
 html_repo() {
   title=$1
   description=$2
@@ -129,10 +123,10 @@ read -p "Please provide a site description: " description
 read -p "Please provide the Git clone URL: " git_url
 read -p "Please provide the SSH clone URL: " ssh_url
 
-# TODO: Loop and create index page with a list of links for each repository
+# Loop and create index page with a list of links for each repository
 html_index "$title" "$description" "$git_list" > "$output_path/build/index.html"
 
-# TODO: Loop and add a page for each repository
+# Loop and add a page for each repository
 for i in "${git_list[@]}"
 do
   # Enter repository directory
@@ -154,6 +148,4 @@ do
   cd $path
 done
 
-# TODO: Minify CSS on move (OPTIONAL FLAG)
-# https://github.com/tdewolff/minify/tree/master/cmd/minify
 cp "$output_path/styles.css" "$output_path/build/styles.css"
