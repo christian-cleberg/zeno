@@ -28,10 +28,10 @@ html_index() {
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
+    <nav>
+      <a href="/">$title</a>
+    </nav>
     <main>
-      <nav>
-        <a href="/">$title</a>
-      </nav>
       <hr>
       <h2>Repositories</h2>
       <ul>
@@ -75,10 +75,10 @@ html_repo() {
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
+    <nav>
+      <a href="/">$title</a>
+    </nav>
     <main>
-      <nav>
-        <a href="/">$title</a>
-      </nav>
       <hr>
       <p>Clone</p>
       <p>git://$git_url/$repo_name.git</p>
@@ -92,17 +92,17 @@ html_repo() {
       <hr>
       <p>Last Commit</p>
       <pre><code>
-      $(while IFS= read -r line; do
-        escaped_line_tmp=${line//"<"/"&lt;"}
-        escaped_line=${escaped_line_tmp/">"/"&gt;"}
-        if [[ ${line:0:1} == \+ ]]; then
-          echo "<span class='diff-add'>$escaped_line</span>";
-        elif [[ ${line:0:1} == \- ]]; then
-          echo "<span class='diff-del'>$escaped_line</span>";
-        else
-          echo "$escaped_line";
-        fi
-      done < <(printf '%s\n' "$diff"))
+$(while IFS= read -r line; do
+  escaped_line_tmp=${line//"<"/"&lt;"}
+  escaped_line=${escaped_line_tmp/">"/"&gt;"}
+  if [[ ${line:0:1} == \+ ]]; then
+    echo "<span class='diff-add'>$escaped_line</span>";
+  elif [[ ${line:0:1} == \- ]]; then
+    echo "<span class='diff-del'>$escaped_line</span>";
+  else
+    echo "$escaped_line";
+  fi
+done < <(printf '%s\n' "$diff"))
       </code></pre>
       <hr>
       <p>Log</p>
