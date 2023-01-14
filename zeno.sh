@@ -1,9 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 # TODO: Accept a git directory that may be full of repos, then loop through
 read -p "Enter the path to the git repo: " path
 
+# Enter repository directory
 cd $path
+
+# Create fresh build directory
 rm -rf build && mkdir build
 
 # TODO: List of git repositories should be formatted as:
@@ -45,9 +48,9 @@ html_index() {
 EOF
 }
 
-# TODO: Parse commit/diff variables for + or - signs at the beginning of a line, 
-# then wrap in a <span class="diff-add"> of <span class="diff-del"> tag so that 
-# we can color-code them
+# TODO: Create vertical UL nav (will require creating repo/ dir instead of 
+# repo.html):
+# README (/), Log (/log/), Tree (/tree/), Diff (/diff/)
 html_repo() {
   title=$1
   description=$2
@@ -59,6 +62,7 @@ html_repo() {
   git_url=$8
   ssh_url=$9
   datetime=$(date)
+
 
   cat <<EOF
 <!doctype html>
@@ -73,7 +77,7 @@ html_repo() {
   <body>
     <main>
       <nav>
-        <a>$title</a>
+        <a href="/">$title</a>
       </nav>
       <hr>
       <p>Clone</p>
@@ -87,7 +91,17 @@ html_repo() {
       <p>$(while IFS= read -r line; do echo "<br>$line"; done < <(printf '%s\n' "$files"))</p>
       <hr>
       <p>Last Commit</p>
-      <p>$(while IFS= read -r line; do echo "<br>$line"; done < <(printf '%s\n' "$diff"))</p>
+      <p>
+      $(while IFS= read -r line; do
+        if [[ ${line:0:1} == \+ ]]; then
+          echo "<br><span class='diff-add'>$line</span>";
+        elif [[ ${line:0:1} == \- ]]; then
+          echo "<br><span class='diff-del'>$line</span>";
+        else
+          echo "<br>$line";
+        fi
+      done < <(printf '%s\n' "$diff"))
+      </p>
       <hr>
       <p>Log</p>
       <p>$(while IFS= read -r line; do echo "<br>$line"; done < <(printf '%s\n' "$log"))</p>
