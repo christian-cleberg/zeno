@@ -1,21 +1,23 @@
 #!/bin/bash
 
 # TODO: Accept a git directory that may be full of repos, then loop through
-read -p "Enter the path to the git repo: " path
+read -p "Enter the path to your git repositories: " path
 
 # Enter repository directory
+output_path=$(pwd)
 cd $path
+git_dirs=$(ls -d */.git/ | sed "s/\/.git\///")
+git_list=($git_dirs)
 
 # Create fresh build directory
-rm -rf build && mkdir build
+rm -rf "$output_path/build" && mkdir "$output_path/build"
 
 # TODO: List of git repositories should be formatted as:
 # Name - Description - Owner - Last Modified
 html_index() {
   title=$1
   description=$2
-  # git_list=$()
-  git_list="git list example string"
+  git_list=$3
   datetime=$(date)
 
   cat <<EOF
@@ -36,7 +38,12 @@ html_index() {
       <hr>
       <h2>Repositories</h2>
       <ul>
-        $(while IFS= read -r line; do echo "<li>$line</li>"; done < <(printf '%s\n' "$git_list"))
+        $(
+          for i in "${git_list[@]}"
+          do
+            echo "<li><a href='/$i'>$i</a></li>"
+          done
+        )
       </ul>
     </main>
     <hr>
@@ -62,7 +69,6 @@ html_repo() {
   git_url=$8
   ssh_url=$9
   datetime=$(date)
-
 
   cat <<EOF
 <!doctype html>
@@ -115,12 +121,6 @@ html_repo() {
 EOF
 }
 
-# Get repository info
-branches=$(git branch)
-log=$(git log)
-diff=$(git show)
-files=$(git ls-tree --name-only --full-tree -r HEAD)
-
 # Gather HTML options
 read -p "Please provide a site title: " title
 read -p "Please provide a site description: " description
@@ -128,13 +128,30 @@ read -p "Please provide the Git clone URL: " git_url
 read -p "Please provide the SSH clone URL: " ssh_url
 
 # TODO: Loop and create index page with a list of links for each repository
-html_index "$title" "$description" > build/index.html
+html_index "$title" "$description" "$git_list" > "$output_path/build/index.html"
 
 # TODO: Loop and add a page for each repository
-repo_name=$(basename `git rev-parse --show-toplevel`)
-repo_description=$(> .git/description)
-html_repo "$title" "$repo_description" "$branches" "$log" "$diff" "$files" "$repo_name" "$git_url" "$ssh_url" > build/"$repo_name.html"
+for i in "${git_list[@]}"
+do
+  # Enter repository directory
+  cd $i
+
+  # Get repository info
+  branches=$(git branch)
+  log=$(git log)
+  diff=$(git show)
+  files=$(git ls-tree --name-only --full-tree -r HEAD)
+  repo_name=$(basename `git rev-parse --show-toplevel`)
+  repo_description=$(> .git/description)
+
+  # Create repo dir and build HTML
+  rm -rf "$output_path/build/$repo_name" && mkdir "$output_path/build/$repo_name"
+  html_repo "$title" "$repo_description" "$branches" "$log" "$diff" "$files" "$repo_name" "$git_url" "$ssh_url" > "$output_path/build/$repo_name/index.html"
+
+  # Reset to git directory
+  cd $path
+done
 
 # TODO: Minify CSS on move (OPTIONAL FLAG)
 # https://github.com/tdewolff/minify/tree/master/cmd/minify
-cp styles.css build/styles.css
+cp "$output_path/styles.css" "$output_path/build/styles.css"
