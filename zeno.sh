@@ -28,7 +28,7 @@ html_index() {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="$description">
     <title>$title</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <main>
@@ -78,7 +78,7 @@ html_repo() {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="$description">
     <title>$repo_name | $title</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <main>
@@ -97,17 +97,19 @@ html_repo() {
       <p>$(while IFS= read -r line; do echo "<br>$line"; done < <(printf '%s\n' "$files"))</p>
       <hr>
       <p>Last Commit</p>
-      <p>
+      <pre><code>
       $(while IFS= read -r line; do
+        escaped_line_tmp=${line//"<"/"&lt;"}
+        escaped_line=${escaped_line_tmp/">"/"&gt;"}
         if [[ ${line:0:1} == \+ ]]; then
-          echo "<br><span class='diff-add'>$line</span>";
+          echo "<span class='diff-add'>$escaped_line</span>";
         elif [[ ${line:0:1} == \- ]]; then
-          echo "<br><span class='diff-del'>$line</span>";
+          echo "<span class='diff-del'>$escaped_line</span>";
         else
-          echo "<br>$line";
+          echo "$escaped_line";
         fi
       done < <(printf '%s\n' "$diff"))
-      </p>
+      </code></pre>
       <hr>
       <p>Log</p>
       <p>$(while IFS= read -r line; do echo "<br>$line"; done < <(printf '%s\n' "$log"))</p>

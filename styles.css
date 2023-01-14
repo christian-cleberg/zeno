@@ -364,3 +364,7 @@ footer {
 .diff-del {
   color: red;
 }
+
+pre {
+  overflow-x: scroll;
+}
